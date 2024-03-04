@@ -1,27 +1,31 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // HTTPリクエスト用パッケージ
-import 'dart:convert'; // JSONへの変換用パッケージ
+import 'dart:convert';
+
+import 'package:speech_to_text/speech_to_text.dart'; // JSONへの変換用パッケージ
+
+const BG_COLOR = Color(0xff2C2C2C);
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  final title = 'Spotify API';
+  const MyApp({super.key});
+  final title = 'Spotify Atomation';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Spotify API',
-      home: MyHomePage(title: this.title),
+      title: 'spotify automation',
+      home: MyHomePage(title: title),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
 
   @override
@@ -30,6 +34,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   dynamic responseState;
+  SpeechToText speechToText = SpeechToText();
+  var text = "音声を文字に変換します";
+  var isListening = false;
 
   // アクセストークンの取得
   Future<void> playMusic(int index) async {
@@ -54,15 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       'position_ms': 0,
     });
-    final playMusicResponse = await http.put(
-      playMusicUrl,
-      headers: {
-      'Authorization': 'Bearer ${accessToken.toString()}',
-      'Content-Type': 'application/json',
-      },
-      body: playMusicBody
-    );
-
+    final playMusicResponse = await http.put(playMusicUrl,
+        headers: {
+          'Authorization': 'Bearer ${accessToken.toString()}',
+          'Content-Type': 'application/json',
+        },
+        body: playMusicBody);
     setState(() {
       responseState = playMusicResponse;
     });
@@ -71,6 +75,49 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
+      floatingActionButton: AvatarGlow(
+        animate: isListening,
+        duration: const Duration(milliseconds: 2000),
+        glowColor: BG_COLOR,
+        child: GestureDetector(
+          // ボタンを押している間だけ認識
+          onTapDown: (details) async {
+            if (!isListening) {
+              var available = await speechToText.initialize();
+              if (available) {
+                setState(() {
+                  isListening = true;
+                  speechToText.listen(
+                    onResult: (result) {
+                      setState(() {
+                        text = result.recognizedWords;
+                      });
+                    },
+                    localeId: 'ja_JP', // 日本語の設定
+                  );
+                });
+              }
+            }
+          },
+          // ボタンを離すと認識
+          onTapUp: (details) {
+            setState(() {
+              isListening = false;
+            });
+            speechToText.stop();
+          },
+          child: CircleAvatar(
+            backgroundColor: BG_COLOR,
+            radius: 35,
+            child: Icon(
+              isListening ? Icons.mic : Icons.mic_none,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Spotify API'),
       ),
@@ -78,14 +125,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Text(
-              responseState == null
-                  ? ''
-                  : "completed!",
+              responseState == null ? '' : "completed!",
               style: const TextStyle(fontSize: 30),
             ),
+            const SizedBox(height: 30), // スペースを追加
             ElevatedButton(
               onPressed: () => playMusic(3),
               child: const Text('Push to play music!'),
+            ),
+            const SizedBox(height: 30), // スペースを追加
+            Text(
+              text
             )
           ],
         ),
