@@ -30,13 +30,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   dynamic responseState;
-  Future<void> getData() async {
-    final response = await http.get(Uri.https('yesno.wtf', '/api'));
-    final jsonResponse = jsonDecode(response.body);
-    setState(() {
-      responseState = jsonResponse;
-    });
-  }
 
   Future<void> getAccessToken() async {
     final url = Uri.parse('https://accounts.spotify.com/api/token');
