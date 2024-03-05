@@ -4,9 +4,7 @@ import 'package:http/http.dart' as http; // HTTPリクエスト用パッケー�
 import 'dart:convert';
 
 import 'package:speech_to_text/speech_to_text.dart'; // JSONへの変換用パッケージ
-
-const BG_COLOR = Color(0xff2C2C2C);
-const TEXT_COLOR = Color(0xffFEFDFC);
+import 'dart:async'; // delayを使用するために必要
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   SpeechToText speechToText = SpeechToText();
   var text = "聞きたい曲の名前を教えてください";
   var isListening = false;
+  bool isSongExist = true;
   var index = 0;
 
   // アクセストークンの取得
@@ -83,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: AvatarGlow(
         animate: isListening,
         duration: const Duration(milliseconds: 2000),
-        glowColor: BG_COLOR,
+        glowColor: Colors.white,
         child: GestureDetector(
           // ボタンを押している間だけ認識
           onTapDown: (details) async {
@@ -100,17 +99,51 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (result.recognizedWords.startsWith("祝日")) {
                         index = 0;
                         playMusic(index);
-                      } else if (result.recognizedWords.startsWith("もう恋なんて")) {
+                        text = "「祝日天国」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("もう恋")) {
                         index = 1;
                         playMusic(index);
-                      } else if (result.recognizedWords.startsWith("DIGNITY")) {
+                        text = "「もう恋なんてしない」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("ディ")) {
                         index = 2;
                         playMusic(index);
-                      } else if (result.recognizedWords.startsWith("ビームが")) {
+                        text = "「DIGNITY」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("ビーム")) {
                         index = 3;
                         playMusic(index);
+                        text = "「ビームが撃てたらいいのに」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("ハピネス")) {
+                        index = 4;
+                        playMusic(index);
+                        text = "「HAPPINESS」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("奇跡の")) {
+                        index = 5;
+                        playMusic(index);
+                        text = "「軌跡の果て」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("クレイ")) {
+                        index = 6;
+                        playMusic(index);
+                        text = "「Cradles」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("フラワー")) {
+                        index = 7;
+                        playMusic(index);
+                        text = "「flowerwall」を再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("名もなき")) {
+                        index = 8;
+                        playMusic(index);
+                        text = "「名もなき詩」を再生します";
+                        isSongExist = true;
                       } else {
-                        text = "該当する曲がありません";
+                        // text = "該当する曲がありません";
+                        isSongExist = false;
                       }
                     },
                     localeId: 'ja_JP', // 日本語の設定
@@ -125,15 +158,28 @@ class _MyHomePageState extends State<MyHomePage> {
               isListening = false;
             });
             speechToText.stop();
+            if (!isSongExist) {
+              text = "該当する曲がありません\nもう一度教えてください";
+            } else {
+              text = "聞きたい曲の名前を教えてください";
+            }
           },
           child: CircleAvatar(
-            backgroundColor: BG_COLOR,
+            backgroundColor: Colors.deepPurple,
             radius: 35,
             child: Icon(
               isListening ? Icons.mic : Icons.mic_none,
               color: Colors.white,
             ),
           ),
+        ),
+      ),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Color(0xff2C2C2C),
+        title: const Text(
+          '音楽自動再生システム',
+          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffFEFDFC)),
         ),
       ),
       body: Center(
@@ -145,7 +191,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               text,
               style: const TextStyle(
-                  fontSize: 20, color: TEXT_COLOR, fontWeight: FontWeight.w600),
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600),
             ),
           ],
         ),
