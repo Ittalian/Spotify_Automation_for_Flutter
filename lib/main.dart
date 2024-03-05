@@ -136,14 +136,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      // appBar: AppBar(
-      //   title: const Text(
-      //     'Spotify Automation',
-      //     style: TextStyle(fontWeight: FontWeight.w600, color: TEXT_COLOR),
-      //   ),
-      //   backgroundColor: BG_COLOR,
-      //   centerTitle: true,
-      // ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
