@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:speech_to_text/speech_to_text.dart'; // JSONへの変換用パッケージ
 
 const BG_COLOR = Color(0xff2C2C2C);
+const TEXT_COLOR = Color(0xffFEFDFC);
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +14,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  final title = 'Spotify Atomation';
+  final title = 'Spotify Automation';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'spotify automation',
       home: MyHomePage(title: title),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -36,7 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
   dynamic responseState;
   SpeechToText speechToText = SpeechToText();
   var text = "音声を文字に変換します";
+  var debugText = "";
   var isListening = false;
+  var index = 0;
 
   // アクセストークンの取得
   Future<void> playMusic(int index) async {
@@ -94,6 +98,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         text = result.recognizedWords;
                       });
+                      if (result.recognizedWords.startsWith("こ")) {
+                        index = 3;
+                        playMusic(index);
+                        debugText = "認識";
+                      }
                     },
                     localeId: 'ja_JP', // 日本語の設定
                   );
@@ -119,24 +128,32 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       appBar: AppBar(
-        title: const Text('Spotify API'),
+        title: const Text(
+          'Spotify API',
+          style: TextStyle(fontWeight: FontWeight.w600, color: TEXT_COLOR),
+        ),
+        backgroundColor: BG_COLOR,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
           children: [
             Text(
-              responseState == null ? '' : "completed!",
+              responseState == null ? '' : "Completed!",
               style: const TextStyle(fontSize: 30),
             ),
-            const SizedBox(height: 30), // スペースを追加
+            const SizedBox(height: 30), // 縦の余白
             ElevatedButton(
               onPressed: () => playMusic(3),
               child: const Text('Push to play music!'),
             ),
-            const SizedBox(height: 30), // スペースを追加
-            Text(
-              text
-            )
+            const SizedBox(height: 30),
+
+            // デバッグ用
+            Text(text),
+            const SizedBox(height: 30),
+            Text(debugText)
+            
           ],
         ),
       ),
