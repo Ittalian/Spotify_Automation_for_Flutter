@@ -78,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
         animate: isListening,
@@ -99,16 +100,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (result.recognizedWords.startsWith("祝日")) {
                         index = 0;
                         playMusic(index);
-                      }
-                      else if (result.recognizedWords.startsWith("もう恋なんて")) {
+                      } else if (result.recognizedWords.startsWith("もう恋なんて")) {
                         index = 1;
                         playMusic(index);
-                      }
-                      else if (result.recognizedWords.startsWith("DIGNITY")) {
+                      } else if (result.recognizedWords.startsWith("DIGNITY")) {
                         index = 2;
                         playMusic(index);
-                      } 
-                      else if (result.recognizedWords.startsWith("ビームが")) {
+                      } else if (result.recognizedWords.startsWith("ビームが")) {
                         index = 3;
                         playMusic(index);
                       } else {
@@ -138,24 +136,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      appBar: AppBar(
-        title: const Text(
-          'Spotify Automation',
-          style: TextStyle(fontWeight: FontWeight.w600, color: TEXT_COLOR),
-        ),
-        backgroundColor: BG_COLOR,
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: const Text(
+      //     'Spotify Automation',
+      //     style: TextStyle(fontWeight: FontWeight.w600, color: TEXT_COLOR),
+      //   ),
+      //   backgroundColor: BG_COLOR,
+      //   centerTitle: true,
+      // ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset('images/home_image.png'),
+            const SizedBox(height: 30), // 縦の余白
             Text(
               text,
               style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w600),
+                  fontSize: 20, color: TEXT_COLOR, fontWeight: FontWeight.w600),
             ),
           ],
         ),
