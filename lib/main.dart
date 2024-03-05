@@ -37,8 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   dynamic responseState;
   SpeechToText speechToText = SpeechToText();
-  var text = "音声を文字に変換します";
-  var debugText = "";
+  var text = "聞きたい曲の名前を教えてください";
   var isListening = false;
   var index = 0;
 
@@ -79,8 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
+      backgroundColor: Colors.black,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
         animate: isListening,
         duration: const Duration(milliseconds: 2000),
@@ -98,10 +97,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         text = result.recognizedWords;
                       });
-                      if (result.recognizedWords.startsWith("こ")) {
+                      if (result.recognizedWords.startsWith("祝日")) {
+                        index = 0;
+                        playMusic(index);
+                      } else if (result.recognizedWords.startsWith("もう恋なんて")) {
+                        index = 1;
+                        playMusic(index);
+                      } else if (result.recognizedWords.startsWith("DIGNITY")) {
+                        index = 2;
+                        playMusic(index);
+                      } else if (result.recognizedWords.startsWith("ビームが")) {
                         index = 3;
                         playMusic(index);
-                        debugText = "認識";
+                      } else {
+                        text = "該当する曲がありません";
                       }
                     },
                     localeId: 'ja_JP', // 日本語の設定
@@ -127,33 +136,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      appBar: AppBar(
-        title: const Text(
-          'Spotify API',
-          style: TextStyle(fontWeight: FontWeight.w600, color: TEXT_COLOR),
-        ),
-        backgroundColor: BG_COLOR,
-        centerTitle: true,
-      ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              responseState == null ? '' : "Completed!",
-              style: const TextStyle(fontSize: 30),
-            ),
+            Image.asset('images/home_image.png'),
             const SizedBox(height: 30), // 縦の余白
-            ElevatedButton(
-              onPressed: () => playMusic(3),
-              child: const Text('Push to play music!'),
+            Text(
+              text,
+              style: const TextStyle(
+                  fontSize: 20, color: TEXT_COLOR, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 30),
-
-            // デバッグ用
-            Text(text),
-            const SizedBox(height: 30),
-            Text(debugText)
-            
           ],
         ),
       ),
