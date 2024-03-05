@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http; // HTTPリクエスト用パッケー�
 import 'dart:convert';
 
 import 'package:speech_to_text/speech_to_text.dart'; // JSONへの変換用パッケージ
-import 'dart:async'; // delayを使用するために必要
 
 void main() {
   runApp(const MyApp());
