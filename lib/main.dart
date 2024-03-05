@@ -13,7 +13,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  final title = 'Spotify Atomation';
+  final title = 'Spotify Automation';
 
   @override
   Widget build(BuildContext context) {
