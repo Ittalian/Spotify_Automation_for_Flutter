@@ -98,50 +98,55 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (result.recognizedWords.startsWith("祝日")) {
                         index = 0;
                         playMusic(index);
-                        text = "「祝日天国」を再生します";
+                        text = "「祝日天国」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("もう恋")) {
                         index = 1;
                         playMusic(index);
-                        text = "「もう恋なんてしない」を再生します";
+                        text = "「もう恋なんてしない」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("ディ")) {
                         index = 2;
                         playMusic(index);
-                        text = "「DIGNITY」を再生します";
+                        text = "「DIGNITY」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("ビーム")) {
                         index = 3;
                         playMusic(index);
-                        text = "「ビームが撃てたらいいのに」を再生します";
+                        text = "「ビームが撃てたらいいのに」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("ハピネス")) {
                         index = 4;
                         playMusic(index);
-                        text = "「HAPPINESS」を再生します";
+                        text = "「HAPPINESS」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("奇跡の")) {
                         index = 5;
                         playMusic(index);
-                        text = "「軌跡の果て」を再生します";
+                        text = "「軌跡の果て」\nを再生します";
                         isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("クレイ")) {
+                      } else if (result.recognizedWords.startsWith("クレイ") || result.recognizedWords.startsWith("クライ")) {
                         index = 6;
                         playMusic(index);
-                        text = "「Cradles」を再生します";
+                        text = "「Cradles」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("フラワー")) {
                         index = 7;
                         playMusic(index);
-                        text = "「flowerwall」を再生します";
+                        text = "「flowerwall」\nを再生します";
                         isSongExist = true;
                       } else if (result.recognizedWords.startsWith("名もなき")) {
                         index = 8;
                         playMusic(index);
-                        text = "「名もなき詩」を再生します";
+                        text = "「名もなき詩」\nを再生します";
+                        isSongExist = true;
+                      } else if (result.recognizedWords.startsWith("プリテン")) {
+                        index = 9;
+                        playMusic(index);
+                        text = "「Pretender」\nを再生します";
                         isSongExist = true;
                       } else {
-                        // text = "該当する曲がありません";
+                        text = "";
                         isSongExist = false;
                       }
                     },
@@ -178,7 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xff2C2C2C),
         title: const Text(
           '音楽自動再生システム',
-          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffFEFDFC)),
+          style:
+              TextStyle(fontWeight: FontWeight.w600, color: Color(0xffFEFDFC)),
         ),
       ),
       body: Center(
@@ -194,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.white,
                   fontWeight: FontWeight.w600),
             ),
+            const SizedBox(height: 30), // 縦の余白
           ],
         ),
       ),
