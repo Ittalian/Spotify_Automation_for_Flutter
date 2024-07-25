@@ -10,7 +10,7 @@
         </intent>
     </queries>
     <application
-        android:label="spotify_automation"
+        android:label="Spotify音声再生"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
