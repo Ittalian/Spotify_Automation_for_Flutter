@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // HTTPリクエスト用パッケージ
 import 'dart:convert';
 
-import 'package:speech_to_text/speech_to_text.dart'; // JSONへの変換用パッケージ
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:spotify_automation/model/images.dart'; // JSONへの変換用パッケージ
 
 void main() {
   runApp(const MyApp());
@@ -75,11 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String imagesPath = Images().getImagePath();
     return Container(
         margin: const EdgeInsets.only(top: 30),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("images/home_image.png"), fit: BoxFit.cover),
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage(imagesPath), fit: BoxFit.cover),
         ),
         child: Scaffold(
           backgroundColor: Colors.white.withOpacity(0),
@@ -195,15 +196,15 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  color: Colors.white,
-                  child: Text(
-                  text,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600),
-                )),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Text(
+                      text,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
+                    )),
                 const SizedBox(height: 30), // 縦の余白
               ],
             ),
