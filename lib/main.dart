@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // HTTPリクエスト用パッケージ
 import 'dart:convert';
 
-import 'package:speech_to_text/speech_to_text.dart'; // JSONへの変換用パッケージ
-import 'dart:async'; // delayを使用するために必要
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:spotify_automation/model/images.dart'; // JSONへの変換用パッケージ
 
 void main() {
   runApp(const MyApp());
@@ -76,128 +76,139 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: AvatarGlow(
-        animate: isListening,
-        duration: const Duration(milliseconds: 2000),
-        glowColor: Colors.white,
-        child: GestureDetector(
-          // ボタンを押している間だけ認識
-          onTapDown: (details) async {
-            if (!isListening) {
-              var available = await speechToText.initialize();
-              if (available) {
+    String imagesPath = Images().getImagePath();
+    return Container(
+        margin: const EdgeInsets.only(top: 30),
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage(imagesPath), fit: BoxFit.cover),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.white.withOpacity(0),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: AvatarGlow(
+            animate: isListening,
+            duration: const Duration(milliseconds: 2000),
+            glowColor: Colors.white,
+            child: GestureDetector(
+              // ボタンを押している間だけ認識
+              onTapDown: (details) async {
+                if (!isListening) {
+                  var available = await speechToText.initialize();
+                  if (available) {
+                    setState(() {
+                      isListening = true;
+                      speechToText.listen(
+                        onResult: (result) {
+                          setState(() {
+                            text = result.recognizedWords;
+                          });
+                          if (result.recognizedWords.startsWith("祝日")) {
+                            index = 0;
+                            playMusic(index);
+                            text = "「祝日天国」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords.startsWith("もう恋")) {
+                            index = 1;
+                            playMusic(index);
+                            text = "「もう恋なんてしない」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords.startsWith("ディ")) {
+                            index = 2;
+                            playMusic(index);
+                            text = "「DIGNITY」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords.startsWith("ビーム")) {
+                            index = 3;
+                            playMusic(index);
+                            text = "「ビームが撃てたらいいのに」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords
+                              .startsWith("ハピネス")) {
+                            index = 4;
+                            playMusic(index);
+                            text = "「HAPPINESS」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords.startsWith("奇跡の")) {
+                            index = 5;
+                            playMusic(index);
+                            text = "「軌跡の果て」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords.startsWith("クレイ") ||
+                              result.recognizedWords.startsWith("クライ")) {
+                            index = 6;
+                            playMusic(index);
+                            text = "「Cradles」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords
+                              .startsWith("フラワー")) {
+                            index = 7;
+                            playMusic(index);
+                            text = "「flowerwall」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords
+                              .startsWith("名もなき")) {
+                            index = 8;
+                            playMusic(index);
+                            text = "「名もなき詩」\nを再生します";
+                            isSongExist = true;
+                          } else if (result.recognizedWords
+                              .startsWith("プリテン")) {
+                            index = 9;
+                            playMusic(index);
+                            text = "「Pretender」\nを再生します";
+                            isSongExist = true;
+                          } else {
+                            text = "";
+                            isSongExist = false;
+                          }
+                        },
+                        localeId: 'ja_JP', // 日本語の設定
+                      );
+                    });
+                  }
+                }
+              },
+              // ボタンを離すと認識
+              onTapUp: (details) {
                 setState(() {
-                  isListening = true;
-                  speechToText.listen(
-                    onResult: (result) {
-                      setState(() {
-                        text = result.recognizedWords;
-                      });
-                      if (result.recognizedWords.startsWith("祝日")) {
-                        index = 0;
-                        playMusic(index);
-                        text = "「祝日天国」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("もう恋")) {
-                        index = 1;
-                        playMusic(index);
-                        text = "「もう恋なんてしない」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("ディ")) {
-                        index = 2;
-                        playMusic(index);
-                        text = "「DIGNITY」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("ビーム")) {
-                        index = 3;
-                        playMusic(index);
-                        text = "「ビームが撃てたらいいのに」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("ハピネス")) {
-                        index = 4;
-                        playMusic(index);
-                        text = "「HAPPINESS」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("奇跡の")) {
-                        index = 5;
-                        playMusic(index);
-                        text = "「軌跡の果て」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("クレイ")) {
-                        index = 6;
-                        playMusic(index);
-                        text = "「Cradles」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("フラワー")) {
-                        index = 7;
-                        playMusic(index);
-                        text = "「flowerwall」を再生します";
-                        isSongExist = true;
-                      } else if (result.recognizedWords.startsWith("名もなき")) {
-                        index = 8;
-                        playMusic(index);
-                        text = "「名もなき詩」を再生します";
-                        isSongExist = true;
-                      } else {
-                        // text = "該当する曲がありません";
-                        isSongExist = false;
-                      }
-                    },
-                    localeId: 'ja_JP', // 日本語の設定
-                  );
+                  isListening = false;
                 });
-              }
-            }
-          },
-          // ボタンを離すと認識
-          onTapUp: (details) {
-            setState(() {
-              isListening = false;
-            });
-            speechToText.stop();
-            if (!isSongExist) {
-              text = "該当する曲がありません\nもう一度教えてください";
-            } else {
-              text = "聞きたい曲の名前を教えてください";
-            }
-          },
-          child: CircleAvatar(
-            backgroundColor: Colors.deepPurple,
-            radius: 35,
-            child: Icon(
-              isListening ? Icons.mic : Icons.mic_none,
-              color: Colors.white,
+                speechToText.stop();
+                if (!isSongExist) {
+                  text = "該当する曲がありません\nもう一度教えてください";
+                } else {
+                  text = "聞きたい曲の名前を教えてください";
+                }
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.deepPurple,
+                radius: 35,
+                child: Icon(
+                  isListening ? Icons.mic : Icons.mic_none,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Color(0xff2C2C2C),
-        title: const Text(
-          '音楽自動再生システム',
-          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffFEFDFC)),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('images/home_image.png'),
-            const SizedBox(height: 30), // 縦の余白
-            Text(
-              text,
-              style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Text(
+                      text,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
+                    )),
+                const SizedBox(height: 30), // 縦の余白
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
